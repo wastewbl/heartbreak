@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang='zh-CN'>
 <head>
@@ -7,18 +6,18 @@
 <title>破碎的心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:Georgia,'Noto Serif SC','Songti SC',serif;user-select:none;-webkit-user-select:none;cursor:default}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;font-family:Georgia,'Noto Serif SC','Songti SC',serif;user-select:none;-webkit-user-select:none;cursor:default}
 canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%}
-#v{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.7) 100%);z-index:2}
-#p{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;z-index:3;opacity:0;padding:40px 20px;transition:opacity 1.5s ease}
+#v{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.8) 100%);z-index:2}
+#p{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none;z-index:3;opacity:0;padding:40px 20px;transition:opacity 2s ease}
 #p.s{opacity:1}
-.l{opacity:0;transform:translateY(30px);transition:opacity 1.8s ease,transform 1.8s ease;color:rgba(255,255,255,0.88);font-size:clamp(18px,4vw,36px);text-align:center;line-height:2;letter-spacing:0.3em;text-shadow:0 0 40px rgba(255,255,255,0.08),0 0 80px rgba(255,255,255,0.04);font-weight:300;width:100%;max-width:700px}
+.l{opacity:0;transform:translateY(40px);transition:opacity 2.5s ease,transform 2.5s ease;color:rgba(255,255,255,0.88);font-size:clamp(18px,4vw,36px);text-align:center;line-height:2.2;letter-spacing:0.3em;text-shadow:0 0 60px rgba(255,255,255,0.1),0 0 120px rgba(255,255,255,0.05);font-weight:300;width:100%;max-width:700px}
 .l.s{opacity:1;transform:translateY(0)}
-.l:nth-child(2){transition-delay:0.6s}
-.l:nth-child(3){transition-delay:1.2s}
-#g{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.035;background-image:url('data:image/svg+xml,%3Csvg viewBox=%270 0 256 256%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%274%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%2523n)%27/%3E%3C/svg%3E');background-repeat:repeat;background-size:256px 256px}
-#h{position:fixed;bottom:60px;left:0;width:100%;text-align:center;pointer-events:none;z-index:3;color:rgba(255,255,255,0.15);font-size:13px;letter-spacing:0.15em;font-weight:300;opacity:0;animation:hP 3s ease-in-out infinite;animation-delay:2s}
-@keyframes hP{0%,100%{opacity:0}40%,60%{opacity:0.4}}
+.l:nth-child(2){transition-delay:0.8s}
+.l:nth-child(3){transition-delay:1.6s}
+#g{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.025;background-image:url('data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%2523n)'/%3E%3C/svg%3E');background-repeat:repeat;background-size:256px 256px}
+#h{position:fixed;bottom:60px;left:0;width:100%;text-align:center;pointer-events:none;z-index:3;color:rgba(255,255,255,0.12);font-size:13px;letter-spacing:0.15em;font-weight:300;opacity:0;animation:hP 3s ease-in-out infinite;animation-delay:2s}
+@keyframes hP{0%,100%{opacity:0}40%,60%{opacity:0.3}}
 </style>
 </head>
 <body>
@@ -32,25 +31,297 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%}
 </div>
 <div id='h'>轻触屏幕</div>
 <script>
+// ========== HEART MATH ==========
 function hx(t){return 16*Math.pow(Math.sin(t),3)}
 function hy(t){return 13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)}
-var C=document.getElementById('c'),c=C.getContext('2d'),P=document.getElementById('p'),H=document.getElementById('h'),W,Ht,S,F=[],B=0,E=0,Sh=0,An=0,Am=[];
-function R(){var d=window.devicePixelRatio||1;W=window.innerWidth;H=window.innerHeight;C.width=W*d;C.height=H*d;C.style.width=W+'px';C.style.height=H+'px';c.setTransform(d,0,0,d,0,0);S=Math.min(W,H)*0.3;if(!B&&!F.length)F=M()}
-function M(){var N=280,K=7,O=document.createElement('canvas'),o=O.getContext('2d'),s=N*0.42/16;O.width=N;O.height=N;o.save();o.translate(N/2,N/2);o.scale(s,-s);o.beginPath();o.moveTo(hx(0),hy(0));for(var t=.01;t<=6.283;t+=.005)o.lineTo(hx(t),hy(t));o.closePath();o.fillStyle='#f00';o.fill();o.restore();var D=o.getImageData(0,0,N,N).data,n=Math.ceil(N/K),L=[],hw=S*1.05,hh=S*1.18;
-for(var y=0;y<n;y++)for(var x=0;x<n;x++){var sx=x*K,sy=y*K,ex=Math.min(sx+K,N),ey=Math.min(sy+K,N),hhh=0,r=0,g=0,b=0,cnt=0;
-for(var py=sy;py<ey;py++)for(var px=sx;px<ex;px++){var i=(py*N+px)*4;if(D[i+3]>40){hhh=1;r+=D[i];g+=D[i+1];b+=D[i+2];cnt++}}
-if(hhh&&cnt>0){var mx=(sx+ex)/2,my=(sy+ey)/2,px=W/2+(mx/N-.5)*2*hw,py=H/2+(my/N-.5)*2*hh,pw=(ex-sx)/N*hw*2,ph=(ey-sy)/N*hh*2,ang=Math.atan2(py-H/2,px-W/2)+(Math.random()-.5)*.6,spd=120+Math.random()*250,df=Math.sqrt(Math.pow((px-W/2)/hw,2)+Math.pow((py-H/2)/hh,2));
-L.push({x:px,y:py,w:Math.max(pw,1.5),h:Math.max(ph,1.5),r:Math.round(r/cnt),g:Math.round(g/cnt),b:Math.round(b/cnt),a:1,ro:0,vx:Math.cos(ang)*spd*(.7+df*.3),vy:Math.sin(ang)*spd*(.7+df*.3)-30,rs:(Math.random()-.5)*4,dl:Math.pow(Math.random(),.7)*1.2,sx:px,sy:py})}}
-return L}
-function dH(o,p){var cx=W/2,cy=H/2,s=S/16;o.save();o.shadowColor='rgba(255,50,50,'+(.5+.3*p)+')';o.shadowBlur=60+30*p;var g=o.createRadialGradient(cx,cy-S*.1,0,cx,cy,S);g.addColorStop(0,'#ff4444');g.addColorStop(.2,'#ff1a1a');g.addColorStop(.5,'#e60000');g.addColorStop(.75,'#990000');g.addColorStop(1,'#4d0000');o.beginPath();o.translate(cx,cy);o.scale(s,-s);o.moveTo(hx(0),hy(0));for(var t=.01;t<=6.283;t+=.005)o.lineTo(hx(t),hy(t));o.closePath();o.fillStyle=g;o.fill();o.restore()}
-function dF(o,e){for(var i=0;i<F.length;i++){var f=F[i];if(f.a<=.001)continue;var t=Math.max(0,e-f.dl);if(t<=0){o.save();o.globalAlpha=1;o.fillStyle='rgb('+f.r+','+f.g+','+f.b+')';o.fillRect(f.x-f.w/2,f.y-f.h/2,f.w,f.h);o.restore();continue}
-var sp=Math.min(t/2,1),es=1-Math.pow(1-sp,3);f.x=f.sx+f.vx*es;f.y=f.sy+f.vy*es+80*Math.pow(es,1.5);f.ro+=f.rs*.016;var ft=Math.max(0,t-1.2);f.a=Math.max(0,1-ft/1.8);o.save();o.globalAlpha=f.a;o.translate(f.x,f.y);o.rotate(f.ro);o.fillStyle='rgb('+f.r+','+f.g+','+f.b+')';o.fillRect(-f.w/2,-f.h/2,f.w,f.h);o.restore()}}
-function iA(){Am=[];for(var i=0;i<30;i++){var a=Math.random()*6.283,d=S*(.5+Math.random()*.8);Am.push({x:Math.cos(a)*d,y:Math.sin(a)*d*.85,sz:1+Math.random()*2,al:.1+Math.random()*.3,sp:.2+Math.random()*.5,ph:Math.random()*6.283})}}
-function dA(o,t){if(B)return;for(var i=0;i<Am.length;i++){var p=Am[i],pu=Math.sin(t*p.sp+p.ph)*.5+.5,dx=p.x+Math.sin(t*.3+p.ph)*10,dy=p.y+Math.cos(t*.4+p.ph)*8;o.save();o.globalAlpha=p.al*pu;o.fillStyle='rgba(255,100,100,0.6)';o.shadowColor='rgba(255,50,50,0.3)';o.shadowBlur=8;o.beginPath();o.arc(W/2+dx,H/2+dy,p.sz,0,6.283);o.fill();o.restore()}}
-var lt=0;
-function AnFn(ts){var dt=lt?(ts-lt)/1e3:.016;lt=ts;if(!B)An+=dt;else E+=dt;c.clearRect(0,0,W,H);if(!B){var bg=c.createRadialGradient(W/2,H/2,0,W/2,H/2,S*1.5);bg.addColorStop(0,'rgba(40,0,0,0.15)');bg.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=bg;c.fillRect(0,0,W,H);var pu=Math.sin(An*1.5)*.2+.8;dH(c,pu);dA(c,An)}else{dF(c,E);if(!Sh){var v=0;for(var i=0;i<F.length;i++)if(F[i].a>.05)v++;if(v<5&&E>1.5){Sh=1;setTimeout(function(){var L=document.querySelectorAll('.l');for(var i=0;i<L.length;i++)L[i].classList.add('s');P.classList.add('s')},400)}}}requestAnimationFrame(AnFn)}
-function T(){if(B)return;B=1;E=0;H.style.display='none';F=M()}
-C.addEventListener('click',function(e){e.preventDefault();T()});C.addEventListener('touchstart',function(e){e.preventDefault();T()},{passive:false});window.addEventListener('resize',R);R();iA();setTimeout(function(){H.style.opacity='1'},1e3);requestAnimationFrame(AnFn);
+
+// ========== CANVAS SETUP ==========
+var C=document.getElementById('c'),ctx=C.getContext('2d'),P=document.getElementById('p'),H=document.getElementById('h')
+var W,Ht,S,broken=0,brkTime=0,shown=0,animTime=0,state='idle',shakeInt=0,audioCtx=null,musicStarted=0
+var fragments=[],cracks=[],petals=[],rain=[]
+
+// ========== RESIZE ==========
+function resize(){
+  var d=window.devicePixelRatio||1;W=window.innerWidth;H=window.innerHeight
+  C.width=W*d;C.height=H*d;C.style.width=W+'px';C.style.height=H+'px';ctx.setTransform(d,0,0,d,0,0)
+  S=Math.min(W,H)*0.28;if(!broken)initHeartDrawn=0
+}
+
+// ========== HEART PATH ==========
+function drawHeartPath(o,cx,cy,s){
+  o.beginPath();o.translate(cx,cy);o.scale(s/16,-s/16);o.moveTo(hx(0),hy(0))
+  for(var t=.01;t<=6.283;t+=.005)o.lineTo(hx(t),hy(t));o.closePath();o.setTransform(window.devicePixelRatio||1,0,0,window.devicePixelRatio||1,0,0)
+}
+
+// ========== HEARTBEAT ==========
+function getHeartScale(t){
+  var c=t%1.2
+  if(c<0.1){var p=c/0.1;return 1+0.10*Math.sin(p*Math.PI)}
+  if(c<0.22){var p=(c-0.1)/0.12;return 1+0.10*Math.exp(-p*6)}
+  if(c<0.32){var p=(c-0.22)/0.1;return 1+0.05*Math.sin(p*Math.PI)}
+  return 1
+}
+
+// ========== DRAW HEART ==========
+function drawHeart(o,t,pulse){
+  var cx=W/2,cy=H/2,scale=getHeartScale(t)*pulse,s=S*scale
+  o.save();o.shadowColor='rgba(255,50,50,'+(0.4+0.3*pulse)+')';o.shadowBlur=50+25*pulse
+  var grad=o.createRadialGradient(cx,cy-s*0.1,0,cx,cy,s)
+  grad.addColorStop(0,'#ff4444');grad.addColorStop(0.25,'#ff1a1a');grad.addColorStop(0.55,'#e60000');grad.addColorStop(0.8,'#990000');grad.addColorStop(1,'#330000')
+  drawHeartPath(o,cx,cy,s);o.fillStyle=grad;o.fill();o.restore()
+  // Inner glow highlight
+  o.save()
+  drawHeartPath(o,cx-s*0.08,cy-s*0.15,s*0.35);o.fillStyle='rgba(255,200,200,0.12)';o.fill();o.restore()
+}
+
+// ========== RAIN SYSTEM ==========
+function initRain(){
+  rain=[];for(var i=0;i<120;i++)rain.push({x:Math.random()*W,y:Math.random()*H,len:8+Math.random()*15,sp:200+Math.random()*300,op:0.08+Math.random()*0.15,wind:-0.5})
+}
+function drawRain(o,dt){
+  for(var i=0;i<rain.length;i++){
+    var r=rain[i];r.y+=r.sp*dt;r.x+=r.wind
+    if(r.y>H){r.y=-r.len;r.x=Math.random()*W}
+    o.strokeStyle='rgba(160,170,200,'+r.op+')';o.lineWidth=0.8
+    o.beginPath();o.moveTo(r.x,r.y);o.lineTo(r.x+r.wind*3,r.y+r.len);o.stroke()
+  }
+}
+
+// ========== ROSE PETALS ==========
+function spawnPetal(){
+  return{
+    x:Math.random()*W,y:-20,size:8+Math.random()*15,rot:Math.random()*6.283,rotSp:(Math.random()-0.5)*2,
+    sway:Math.random()*30+10,phase:Math.random()*6.283,sp:30+Math.random()*80,op:0.5+Math.random()*0.5,
+    col:['#cc2244','#dd3355','#bb1133','#882244','#cc2255'][Math.floor(Math.random()*5)],
+    life:1
+  }
+}
+function drawPetal(o,p){
+  o.save();o.globalAlpha=p.op*p.life;o.translate(p.x,p.y);o.rotate(p.rot)
+  o.scale(p.size/15,p.size/15)
+  o.beginPath();o.moveTo(0,0);o.bezierCurveTo(6,-10,18,-8,18,2);o.bezierCurveTo(18,10,6,14,0,8)
+  o.bezierCurveTo(-6,14,-18,10,-18,2);o.bezierCurveTo(-18,-8,-6,-10,0,0)
+  o.fillStyle=p.col;o.fill();o.restore()
+}
+function updatePetals(dt){
+  for(var i=petals.length-1;i>=0;i--){
+    var p=petals[i];p.x+=Math.sin(p.phase+animTime*1.5)*p.sway*dt;p.y+=p.sp*dt
+    p.rot+=p.rotSp*dt;p.life-=0.02*dt;if(p.y>H+50||p.life<=0)petals.splice(i,1)
+  }
+}
+
+// ========== CRACK SYSTEM ==========
+function genCracks(){
+  var cx=W/2,cy=H/2,hs=S,list=[]
+  for(var i=0;i<14+Math.floor(Math.random()*8);i++){
+    var a=Math.random()*6.283,d=hs*(0.1+Math.random()*0.7),x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d*0.85
+    var pts=[{x:x,y:y}],dir=Math.random()*6.283,seg=4+Math.floor(Math.random()*6)
+    for(var j=0;j<seg;j++){
+      dir+=(Math.random()-0.5)*1.5;var len=3+Math.random()*12;var nx=x+Math.cos(dir)*len,ny=y+Math.sin(dir)*len
+      pts.push({x:nx,y:ny});x=nx;y=ny
+    }
+    list.push({pts:pts,delay:i*60+Math.random()*200,progress:0,speed:0.004+Math.random()*0.006})
+  }
+  return list
+}
+function drawCracks(o){
+  for(var i=0;i<cracks.length;i++){
+    var cr=cracks[i];if(cr.progress<=0)continue
+    o.strokeStyle='rgba(255,180,150,'+(0.3+cr.progress*0.5)+')';o.lineWidth=0.8+cr.progress*1.2
+    var total=cr.pts.length,draw=Math.max(1,Math.floor(total*cr.progress))
+    o.beginPath();o.moveTo(cr.pts[0].x,cr.pts[0].y)
+    for(var j=1;j<draw;j++)o.lineTo(cr.pts[j].x,cr.pts[j].y);o.stroke()
+    // Glow on crack
+    o.strokeStyle='rgba(255,100,50,'+(0.1*cr.progress)+')';o.lineWidth=2+cr.progress*3;o.shadowColor='rgba(255,50,0,0.3)';o.shadowBlur=8
+    o.beginPath();o.moveTo(cr.pts[0].x,cr.pts[0].y)
+    for(var j=1;j<draw;j++)o.lineTo(cr.pts[j].x,cr.pts[j].y);o.stroke()
+    o.shadowBlur=0
+  }
+}
+function updateCracks(dt){
+  var allDone=1;for(var i=0;i<cracks.length;i++){
+    var cr=cracks[i]
+    if(brkTime*1000>cr.delay)cr.progress=Math.min(1,cr.progress+cr.speed*dt*60)
+    if(cr.progress<1)allDone=0
+  }
+  return allDone
+}
+
+// ========== FRAGMENTS ==========
+function createFrags(){
+  var N=280,K=7,O=document.createElement('canvas'),o=O.getContext('2d')
+  O.width=N;O.height=N;var s=N*0.42/16
+  o.save();o.translate(N/2,N/2);o.scale(s,-s)
+  o.beginPath();o.moveTo(hx(0),hy(0));for(var t=.01;t<=6.283;t+=.005)o.lineTo(hx(t),hy(t));o.closePath();o.fillStyle='#f00';o.fill();o.restore()
+  var D=o.getImageData(0,0,N,N).data,n=Math.ceil(N/K),L=[],hw=S*1.05,hh=S*1.18
+  for(var y=0;y<n;y++)for(var x=0;x<n;x++){
+    var sx=x*K,sy=y*K,ex=Math.min(sx+K,N),ey=Math.min(sy+K,N),hhh=0,r=0,g=0,b=0,cnt=0
+    for(var py=sy;py<ey;py++)for(var px=sx;px<ex;px++){var i=(py*N+px)*4;if(D[i+3]>40){hhh=1;r+=D[i];g+=D[i+1];b+=D[i+2];cnt++}}
+    if(hhh&&cnt>0){
+      var mx=(sx+ex)/2,my=(sy+ey)/2,px=W/2+(mx/N-.5)*2*hw,py=H/2+(my/N-.5)*2*hh,pw=(ex-sx)/N*hw*2,ph=(ey-sy)/N*hh*2
+      var ang=Math.atan2(py-H/2,px-W/2)+(Math.random()-.5)*.4,spd=300+Math.random()*500
+      var df=Math.sqrt(Math.pow((px-W/2)/hw,2)+Math.pow((py-H/2)/hh,2))
+      L.push({x:px,y:py,w:Math.max(pw,1.5),h:Math.max(ph,1.5),r:Math.round(r/cnt),g:Math.round(g/cnt),b:Math.round(b/cnt),a:1,ro:0,
+        vx:Math.cos(ang)*spd*(.5+df*.5),vy:Math.sin(ang)*spd*(.5+df*.5)-60,rs:(Math.random()-.5)*6,dl:Math.pow(Math.random(),.7)*0.8,sx:px,sy:py})
+    }
+  }
+  return L
+}
+function drawFrags(o,e){
+  for(var i=0;i<fragments.length;i++){
+    var f=fragments[i];if(f.a<=.001)continue
+    var t=Math.max(0,e-f.dl),sp=Math.min(t/1.5,1),es=1-Math.pow(1-sp,3)
+    f.x=f.sx+f.vx*es;f.y=f.sy+f.vy*es+120*Math.pow(es,1.8);f.ro+=f.rs*.016
+    var ft=Math.max(0,t-0.8);f.a=Math.max(0,1-ft/1.5)
+    o.save();o.globalAlpha=f.a;o.translate(f.x,f.y);o.rotate(f.ro)
+    o.fillStyle='rgb('+f.r+','+f.g+','+f.b+')';o.fillRect(-f.w/2,-f.h/2,f.w,f.h);o.restore()
+  }
+}
+
+// ========== EXPLOSION FLASH ==========
+var flashAlpha=0
+function triggerFlash(){flashAlpha=0.5}
+
+// ========== PIANO BGM ==========
+function initAudio(){
+  if(audioCtx)return
+  try{audioCtx=new(window.AudioContext||window.webkitAudioContext)}catch(e){return}
+}
+function playNote(f,s,d,v){
+  if(!audioCtx)return
+  var o1=audioCtx.createOscillator(),g1=audioCtx.createGain()
+  o1.type='triangle';o1.frequency.value=f;g1.gain.setValueAtTime(0,s)
+  g1.gain.linearRampToValueAtTime(v*0.5,s+0.005);g1.gain.exponentialRampToValueAtTime(0.001,s+d)
+  o1.connect(g1);g1.connect(audioCtx.destination);o1.start(s);o1.stop(s+d+0.1)
+  var o2=audioCtx.createOscillator(),g2=audioCtx.createGain()
+  o2.type='sine';o2.frequency.value=f*2;g2.gain.setValueAtTime(0,s)
+  g2.gain.linearRampToValueAtTime(v*0.2,s+0.01);g2.gain.exponentialRampToValueAtTime(0.001,s+d*0.6)
+  o2.connect(g2);g2.connect(audioCtx.destination);o2.start(s);o2.stop(s+d+0.1)
+}
+function playMelody(){
+  if(musicStarted)return;musicStarted=1;initAudio();if(!audioCtx)return
+  // Sad piano melody in A minor - "Kiss the Rain" style
+  var notes=[
+    [440,0.3,0.3],[392,0.3,0.3],[349,0.5,0.4],[330,0.6,0.3],
+    [294,0.8,0.4],[349,0.6,0.3],[392,0.5,0.3],[440,0.6,0.4],
+    [523,0.8,0.5],[440,0.6,0.3],[392,0.5,0.3],[349,1.2,0.5],
+    [330,0.4,0.3],[294,0.6,0.4],[262,1.0,0.5],[330,0.5,0.3],
+    [349,0.4,0.3],[392,0.8,0.5],[349,0.6,0.3],[294,0.5,0.3],
+    [262,1.5,0.6],[262,1.2,0.5]
+  ]
+  var t=audioCtx.currentTime+0.3
+  for(var i=0;i<notes.length;i++){
+    playNote(notes[i][0],t,notes[i][2],notes[i][1])
+    t+=notes[i][1]+0.05
+  }
+  // Schedule repeat
+  setTimeout(playMelody,(t-audioCtx.currentTime)*1000+500)
+}
+
+// ========== AMBIENT PARTICLES ==========
+var amb=[]
+function initAmb(){amb=[];for(var i=0;i<25;i++){var a=Math.random()*6.283,d=S*(.5+Math.random()*.8);amb.push({x:Math.cos(a)*d,y:Math.sin(a)*d*.85,sz:1+Math.random()*2,al:0.08+Math.random()*0.2,sp:0.2+Math.random()*0.5,ph:Math.random()*6.283})}}
+function drawAmb(o,t){if(broken)return;for(var i=0;i<amb.length;i++){var p=amb[i],pu=Math.sin(t*p.sp+p.ph)*.5+.5;o.save();o.globalAlpha=p.al*pu;o.fillStyle='rgba(255,80,80,0.5)';o.shadowColor='rgba(255,50,50,0.2)';o.shadowBlur=6;o.beginPath();o.arc(W/2+p.x+Math.sin(t*.3+p.ph)*6,H/2+p.y+Math.cos(t*.4+p.ph)*6,p.sz,0,6.283);o.fill();o.restore()}}
+
+// ========== MAIN LOOP ==========
+var lt=0
+function animFn(ts){
+  var dt=lt?(ts-lt)/1e3:.016;lt=ts
+  if(!broken)animTime+=dt;else brkTime+=dt
+  
+  ctx.clearRect(0,0,W,H)
+  
+  // Rain
+  drawRain(ctx,dt)
+  
+  if(!broken){
+    // Idle state - heart beats
+    var bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,S*1.8)
+    bg.addColorStop(0,'rgba(30,5,5,'+(0.12+0.03*Math.sin(animTime))+')');bg.addColorStop(1,'rgba(0,0,0,0)')
+    ctx.fillStyle=bg;ctx.fillRect(0,0,W,H)
+    
+    var pu=0.9+0.1*Math.sin(animTime*1.5)
+    drawHeart(ctx,animTime,pu)
+    drawAmb(ctx,animTime)
+    
+    // Spawn a few petals during idle
+    if(Math.random()<0.02&&petals.length<8)petals.push(spawnPetal())
+  }else{
+    // SHAKE
+    if(shakeInt>0.5){
+      ctx.save()
+      var sx=(Math.random()-.5)*shakeInt,sy=(Math.random()-.5)*shakeInt
+      ctx.translate(sx,sy);shakeInt*=0.98
+      if(shakeInt<0.5)shakeInt=0
+      ctx.restore()
+    }
+    
+    // Update cracks
+    var cracksDone=updateCracks(dt)
+    
+    // Draw cracks
+    drawCracks(ctx)
+    
+    // Draw fragments
+    if(state=='exploding'){
+      drawFrags(ctx,brkTime)
+      // Spawn petals from explosion
+      if(Math.random()<0.4)petals.push(spawnPetal())
+    }
+    
+    // Flash
+    if(flashAlpha>0){
+      ctx.fillStyle='rgba(255,200,150,'+flashAlpha+')';ctx.fillRect(0,0,W,H)
+      flashAlpha-=dt*1.5
+    }
+    
+    // Update petals
+    updatePetals(dt)
+    
+    // Draw petals
+    for(var i=0;i<petals.length;i++)drawPetal(ctx,petals[i])
+    
+    // Check state transitions
+    if(state=='cracking'&&cracksDone){state='exploding';triggerFlash();fragments=createFrags();shakeInt=25}
+    
+    if(state=='exploding'&&!shown){
+      var v=0;for(var i=0;i<fragments.length;i++)if(fragments[i].a>.05)v++
+      if(v<5&&brkTime>2){shown=1;setTimeout(function(){
+        var L=document.querySelectorAll('.l');for(var i=0;i<L.length;i++)L[i].classList.add('s');P.classList.add('s')
+      },500)}
+    }
+  }
+  
+  // Always draw petals (before and after break)
+  if(!broken){
+    updatePetals(dt)
+    for(var i=0;i<petals.length;i++)drawPetal(ctx,petals[i])
+  }
+  
+  requestAnimationFrame(animFn)
+}
+
+// ========== TRIGGER BREAK ==========
+function T(){
+  if(broken)return;broken=1;brkTime=0;state='cracking'
+  H.style.display='none'
+  cracks=genCracks()
+  shakeInt=8
+  // Spawn petals
+  for(var i=0;i<15;i++){var p=spawnPetal();p.y=Math.random()*H*0.5;petals.push(p)}
+  // Start piano
+  playMelody()
+}
+C.addEventListener('click',function(e){e.preventDefault();T()})
+C.addEventListener('touchstart',function(e){e.preventDefault();T()},{passive:false})
+window.addEventListener('resize',resize)
+
+// ========== INIT ==========
+resize();initRain();initAmb()
+setTimeout(function(){H.style.opacity='1'},1e3)
+// Spawn initial petals
+for(var i=0;i<5;i++){var p=spawnPetal();p.y=Math.random()*H;p.sp=20+Math.random()*40}
+requestAnimationFrame(animFn)
 </script>
 </body>
 </html>
